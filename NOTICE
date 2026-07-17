@@ -1,0 +1,35 @@
+Cipher & Row - Freight Verification MCP
+=======================================
+
+What is open (this repository, MIT licensed)
+--------------------------------------------
+- The tool JSON Schemas in `schemas/`.
+- The client configuration files in `mcp-config/`.
+- The documentation and examples in `docs/` and `examples/`.
+
+These describe the public interface of the Cipher & Row MCP server so that
+developers and AI agents can integrate against a stable, documented contract.
+The live server at https://mcp.cipherandrow.com/mcp is the authoritative source
+of truth; this repository is kept in sync with it.
+
+What is NOT open (proprietary, all rights reserved)
+---------------------------------------------------
+- The Cipher & Row verification server and its source code.
+- The trust-scoring model, fraud-signal derivation, and risk methodology.
+- The data pipelines, registry, and supporting infrastructure.
+
+Publishing these schemas and guides does not grant any license to the Cipher &
+Row engine, scoring model, data, or backend systems, and does not transfer any
+patent, trademark, or trade-secret rights.
+
+Trademarks
+----------
+"Cipher & Row" and associated logos are trademarks of CIPHERANDROW LLC. Use of
+the service is governed by the terms at https://www.cipherandrow.com.
+
+Data & compliance
+-----------------
+Verification responses incorporate data from public and regulated sources
+(including U.S. FMCSA records and Canadian provincial/federal registries).
+Callers are responsible for using that data in compliance with applicable law
+and with each source's terms of use.

@@ -1,0 +1,20 @@
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*~
+
+# Local secrets - never commit real API keys
+.env
+.env.*
+*.key
+secrets.*
+
+# Node (only if you add tooling later)
+node_modules/
+npm-debug.log*

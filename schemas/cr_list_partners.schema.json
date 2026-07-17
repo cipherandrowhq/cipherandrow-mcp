@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mcp.cipherandrow.com/schemas/cr_list_partners.schema.json",
+  "title": "cr_list_partners - arguments",
+  "description": "List your active partners watchlist with current status, last_event_at, and (if `since` is provided) the events that have fired since that timestamp. The hourly partner-watch-diff cron drives change detection.",
+  "type": "object",
+  "x-mcp": {
+    "server": "cipher-and-row",
+    "tool": "cr_list_partners",
+    "category": "watchlist",
+    "ui": { "resourceUri": "ui://cr/watchlist-table.html" },
+    "annotations": {
+      "title": "List partners + recent changes",
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": false
+    }
+  },
+  "properties": {
+    "since": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp. If provided, the response includes events fired after this time for each partner."
+    },
+    "partner_kind": {
+      "type": "string",
+      "enum": ["carrier", "broker"],
+      "description": "Optional filter by kind."
+    },
+    "limit": {
+      "type": "number",
+      "description": "Max partners returned (default 50, max 200)."
+    }
+  },
+  "required": [],
+  "examples": [
+    { "since": "2026-05-01T00:00:00Z" }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mcp.cipherandrow.com/schemas/cr_verify_carrier.schema.json",
+  "title": "cr_verify_carrier - arguments",
+  "description": "Fetch a US carrier's live FMCSA profile by DOT or MC number, at full dashboard parity. Returns the complete carrier profile (operating status, authority history, fleet, insurance detail incl. BIPD/cargo/bond flags + expiry, safety rating, 24-month inspections and crashes, complaints, MCS-150, cargo/operation classifications, contact + addresses), fraud/identity signals - fraud_signals: the same 7-signal set the dashboard's fraud card shows (sanctions, industry fraud reports, operating authority, out-of-service, BIPD insurance, safety record, chameleon/reincarnation check), plus raw double_broker_signals hits and advisory_flags - a legacy risk_assessment (PROCEED/CAUTION/BLOCK), AND a canonical 0-100 trust_score with per-factor breakdown + breakdown_max + data_confidence (the same score the dashboard surfaces). trust_score is null when this carrier has never been looked up across any CR surface. EIN is deliberately excluded from the agent door. FMCSA result cached 24h; trust_score and the fraud/identity signals are read fresh on every call. Requires a DOT or MC number - if you only have a legal name, call cr_search_registry first to resolve the identifier. Not available to carrier-role accounts.",
+  "type": "object",
+  "x-mcp": {
+    "server": "cipher-and-row",
+    "tool": "cr_verify_carrier",
+    "category": "verification",
+    "roles": ["dispatcher", "broker", "3pl", "freight_forwarder"],
+    "roleNote": "Role-gated: carrier-role accounts cannot call carrier verification (prevents account-type arbitrage).",
+    "ui": { "resourceUri": "ui://cr/trust-scorecard.html" },
+    "annotations": {
+      "title": "Verify US carrier (live FMCSA)",
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": true
+    }
+  },
+  "properties": {
+    "dot_number": {
+      "type": "string",
+      "description": "The carrier's USDOT number. Provide this or mc_number."
+    },
+    "mc_number": {
+      "type": "string",
+      "description": "The carrier's MC number. Provide this or dot_number."
+    }
+  },
+  "required": [],
+  "examples": [
+    { "dot_number": "53467" }
+  ]
+}

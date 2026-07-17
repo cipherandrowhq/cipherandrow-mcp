@@ -1,0 +1,175 @@
+{
+  "$comment": "Canonical MCP tools/list manifest for the Cipher & Row freight verification MCP server. This is the exact public Phase 1 tool surface an MCP client receives from https://mcp.cipherandrow.com/mcp. Generated for documentation; the live server is the source of truth. Server: cipher-and-row v2.1.0, MCP protocol 2025-06-18. Descriptions/inputSchemas last synced against a live tools/list call on 2026-07-12.",
+  "server": {
+    "name": "cipher-and-row",
+    "version": "2.1.0",
+    "protocolVersion": "2025-06-18",
+    "endpoint": "https://mcp.cipherandrow.com/mcp",
+    "capabilities": { "tools": { "listChanged": false } }
+  },
+  "tools": [
+    {
+      "name": "cr_verify_carrier",
+      "description": "Fetch a US carrier's live FMCSA profile by DOT or MC number, at full dashboard parity. Returns the complete carrier profile (operating status, authority history, fleet, insurance detail incl. BIPD/cargo/bond flags + expiry, safety rating, 24-month inspections and crashes, complaints, MCS-150, cargo/operation classifications, contact + addresses), fraud/identity signals - fraud_signals: the same 7-signal set the dashboard's fraud card shows (sanctions, industry fraud reports, operating authority, out-of-service, BIPD insurance, safety record, chameleon/reincarnation check), plus raw double_broker_signals hits and advisory_flags - a legacy risk_assessment (PROCEED/CAUTION/BLOCK), AND a canonical 0-100 trust_score with per-factor breakdown + breakdown_max + data_confidence (the same score the dashboard surfaces). trust_score is null when this carrier has never been looked up across any CR surface. EIN is deliberately excluded from the agent door. FMCSA result cached 24h; trust_score and the fraud/identity signals are read fresh on every call. Requires a DOT or MC number - if you only have a legal name, call cr_search_registry first to resolve the identifier. Not available to carrier-role accounts.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "dot_number": { "type": "string", "description": "The carrier's USDOT number (provide this or mc_number)." },
+          "mc_number": { "type": "string", "description": "The carrier's MC number (provide this or dot_number)." }
+        },
+        "required": []
+      },
+      "annotations": {
+        "title": "Verify US carrier (live FMCSA)",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "_meta": { "ui": { "resourceUri": "ui://cr/trust-scorecard.html" } }
+    },
+    {
+      "name": "cr_verify_broker",
+      "description": "Fetch a freight broker's verified profile and canonical 0-100 trust_score (with per-factor breakdown + breakdown_max + data_confidence), at full dashboard parity. US brokers (mc_number or dot_number): live FMCSA profile, authority status, full surety bond detail (broker.bond: BMC-84/85 type, surety company, amount, effective/cancellation dates, classification flags, freshness), fraud/identity signals - fraud_signals: the same 7-signal set the dashboard's fraud card shows (sanctions, industry fraud reports, broker authority, bond, bond classification, payout/remit-to changes, tender blocks), plus raw double_broker_signals hits and advisory_flags - and risk_assessment. Canadian brokers: provide cab_id (e.g. CAB-ON-0000157) for the Cipher & Row Canadian registry profile (province, verification band, CTQ status) with the same canonical trust_score. If you only have a legal name, call cr_search_registry first to resolve the identifier.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "mc_number": { "type": "string", "description": "US broker MC number (provide one of mc_number / dot_number / cab_id)." },
+          "dot_number": { "type": "string", "description": "US broker DOT number (provide one of mc_number / dot_number / cab_id)." },
+          "cab_id": { "type": "string", "description": "Canadian broker CAB number, format CAB-XX-NNNNNNN." }
+        },
+        "required": []
+      },
+      "annotations": {
+        "title": "Verify broker (US FMCSA or Canadian registry)",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "_meta": { "ui": { "resourceUri": "ui://cr/trust-scorecard.html" } }
+    },
+    {
+      "name": "cr_search_registry",
+      "description": "Find carriers and brokers in the Cipher & Row registry by legal name or identifier (MC, USDOT, CAB, CVOR, CTQ, NSC, CR ID). Returns a list of matches with identity only - legal name, identifiers, country, and claim status - so you can pick the right entity. Trust scores are NOT returned here; call cr_verify_carrier or cr_verify_broker on a match to get its trust score (that is the verified, metered lookup).",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": { "type": "string", "description": "Legal name or identifier (MC, USDOT, CR ID, etc.) - required." },
+          "country": { "type": "string", "enum": ["auto", "US", "CA"], "default": "auto", "description": "Country scope (default auto)." },
+          "entity_type": { "type": "string", "enum": ["carrier", "broker", "any"], "default": "any", "description": "Filter by entity type. 'any' returns both." }
+        },
+        "required": ["query"]
+      },
+      "annotations": {
+        "title": "Search CR registry",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "_meta": { "ui": { "resourceUri": "ui://cr/registry-picker.html" } }
+    },
+    {
+      "name": "cr_session_status",
+      "description": "Introspect the MCP server: build version, calling agent identity, company logistics_role, subscription tier, per-category rate-limit headroom, and the list of tools available to this account type. Use this to detect tier ceilings and confirm which tools your role can call. Returns available_tools - the definitive role- and scope-filtered list your connection can call (computed with the same filter tools/list uses, so the two always agree) - plus granted_scopes so you can self-diagnose a missing-scope mismatch.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      },
+      "annotations": {
+        "title": "MCP server + agent status",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "cr_add_partner",
+      "description": "Add a carrier or broker to your partners watchlist. Cipher & Row monitors authority, insurance, bond, safety rating, address, and phone for material changes and notifies you via your chosen channels. Idempotent: re-adding the same partner updates the existing watch. Provide dot_number when partner_kind=carrier, mc_number when partner_kind=broker.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "partner_kind": { "type": "string", "enum": ["carrier", "broker"], "description": "Carrier accounts may only add partner_kind=broker." },
+          "dot_number": { "type": "string", "description": "The partner's USDOT number. Required when partner_kind=carrier." },
+          "mc_number": { "type": "string", "description": "The partner's MC number. Required when partner_kind=broker." },
+          "legal_name": { "type": "string", "description": "Partner legal name (optional; backfilled from FMCSA if omitted)." },
+          "change_types": { "type": "array", "items": { "type": "string", "enum": ["authority", "insurance", "bond", "safety_rating", "address", "phone", "chameleon_flagged"] }, "description": "Which changes to be notified about. Default: the six standard types; chameleon_flagged (reincarnated-carrier alerts) is opt-in." },
+          "delivery_channels": { "type": "array", "items": { "type": "string", "enum": ["in_app", "email", "sms"] }, "description": "Where to deliver alerts. Default: ['in_app', 'email']." }
+        },
+        "required": ["partner_kind"]
+      },
+      "annotations": {
+        "title": "Add partner to watchlist",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "cr_remove_partner",
+      "description": "Stop watching a partner. Soft-deletes the watch (active=false); past alert history is preserved. Reversible - re-add with cr_add_partner to resume watching.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "partner_id": { "type": "string", "description": "The partner id returned by cr_add_partner / cr_list_partners. Provide this or (partner_kind + dot_number/mc_number)." },
+          "partner_kind": { "type": "string", "enum": ["carrier", "broker"], "description": "Alternative to partner_id." },
+          "dot_number": { "type": "string", "description": "Alternative to partner_id." },
+          "mc_number": { "type": "string", "description": "Alternative to partner_id." }
+        },
+        "required": []
+      },
+      "annotations": {
+        "title": "Remove partner from watchlist",
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "cr_list_partners",
+      "description": "List your active partners watchlist with current status, last_event_at, and (if `since` is provided) the events that have fired since that timestamp. The hourly partner-watch-diff cron drives change detection.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "since": { "type": "string", "description": "ISO timestamp. If provided, response includes events fired after this time for each partner." },
+          "partner_kind": { "type": "string", "enum": ["carrier", "broker"], "description": "Optional filter by kind." },
+          "limit": { "type": "number", "description": "Max partners returned (default 50, max 200)." }
+        },
+        "required": []
+      },
+      "annotations": {
+        "title": "List partners + recent changes",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "_meta": { "ui": { "resourceUri": "ui://cr/watchlist-table.html" } }
+    },
+    {
+      "name": "cr_set_notifications",
+      "description": "Update notification preferences. With `partner_id`: tune one watch. Without: set the company default applied to future cr_add_partner calls. Returns the effective settings after the update.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "partner_id": { "type": "string", "description": "Optional. If omitted, updates the company-default policy on future watches." },
+          "change_types": { "type": "array", "items": { "type": "string", "enum": ["authority", "insurance", "bond", "safety_rating", "address", "phone", "chameleon_flagged"] }, "description": "Replace the watched change types." },
+          "delivery_channels": { "type": "array", "items": { "type": "string", "enum": ["in_app", "email", "sms"] }, "description": "Replace the delivery channels." }
+        },
+        "required": []
+      },
+      "annotations": {
+        "title": "Tune partner alert preferences",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    }
+  ]
+}

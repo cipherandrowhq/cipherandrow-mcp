@@ -1,0 +1,42 @@
+# Cipher & Row - Freight Verification MCP
+
+> An open Model Context Protocol (MCP) interface for AI-agent carrier and broker vetting in
+> freight. Verify US carriers and brokers against live FMCSA data, verify Canadian brokers
+> against the Cipher & Row registry, get a canonical 0-100 trust score with fraud and
+> identity signals, and monitor counterparties for authority/insurance/bond changes - as
+> native tools an autonomous dispatch or brokerage agent can call. The server is an
+> air-gapped verification layer: trust decisions are grounded in out-of-band authoritative
+> records, not in the model's persuadable context, which is how it resists prompt injection.
+
+Endpoint: https://mcp.cipherandrow.com/mcp (Streamable HTTP, MCP protocol 2025-06-18).
+Auth: OAuth 2.1 + PKCE, or an Authorization: Bearer cr_live_ API key.
+Surface: 8 read-only + watchlist tools; no load posting, payments, or messaging.
+
+## Tools
+- [Tool manifest (tools/list JSON)](./schemas/tools.json): all 8 tools with input schemas and annotations
+- [cr_verify_carrier schema](./schemas/cr_verify_carrier.schema.json): live FMCSA carrier verification + trust score
+- [cr_verify_broker schema](./schemas/cr_verify_broker.schema.json): broker verification (US FMCSA or Canadian registry) + surety bond + trust score
+- [cr_search_registry schema](./schemas/cr_search_registry.schema.json): identity search to resolve a name to an identifier
+- [cr_session_status schema](./schemas/cr_session_status.schema.json): identity, role, tier, rate-limit headroom
+- [cr_add_partner schema](./schemas/cr_add_partner.schema.json): add a counterparty to the monitored watchlist
+- [cr_list_partners schema](./schemas/cr_list_partners.schema.json): list watchlist + change events
+- [cr_set_notifications schema](./schemas/cr_set_notifications.schema.json): tune alert change-types and channels
+- [cr_remove_partner schema](./schemas/cr_remove_partner.schema.json): stop watching a partner
+
+## Documentation
+- [Human tool reference](./docs/TOOLS.md): arguments, returns, and examples for every tool
+- [Prompt-injection defense](./docs/PROMPT-INJECTION-DEFENSE.md): how the MCP acts as an air-gapped verification layer against fake carriers and double-brokering
+- [API to MCP](./docs/API-TO-MCP.md): server-side audit log and multi-signal risk scores exposed as LLM-ready freight data
+- [Authentication](./docs/AUTHENTICATION.md): OAuth 2.1 + PKCE and API-key auth
+- [Rate limits](./docs/RATE-LIMITS.md): per-tier, per-category ceilings
+
+## Getting started
+- [README](./README.md): overview, quickstart, and repository map
+- [Walkthrough: vet a carrier](./examples/vet-a-carrier.md): disambiguate, verify, decide, monitor
+- [Client configs](./mcp-config/): Claude Desktop, Claude Code, Cursor, and generic MCP clients
+- [Setup guide with live examples](https://www.cipherandrow.com/mcp/setup)
+
+## About
+- [Security policy](./SECURITY.md): responsible disclosure and security posture
+- [License and scope](./NOTICE): the interface is open (MIT); the engine and scoring model are proprietary
+- Contact: partnerships@cipherandrow.com

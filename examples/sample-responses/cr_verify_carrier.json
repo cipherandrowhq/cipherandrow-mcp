@@ -1,0 +1,62 @@
+{
+  "_note": "Illustrative response shape for cr_verify_carrier, using a real public identifier (Werner Enterprises, USDOT 53467). Field values are representative for documentation; call the live server for authoritative data. EIN is intentionally never present on the agent door.",
+  "jsonrpc": "2.0",
+  "id": 1,
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "Werner Enterprises (USDOT 53467). Authority AUTHORIZED, insurance on file, no out-of-service orders in 24 months. Trust 100/100 (verified_elite). Verdict: PROCEED."
+      }
+    ],
+    "structuredContent": {
+      "entity_type": "carrier",
+      "cached": false,
+      "identifiers": { "dot_number": "53467", "mc_number": "MC-123456" },
+      "profile": {
+        "legal_name": "WERNER ENTERPRISES INC",
+        "dba_name": null,
+        "operating_status": "AUTHORIZED_FOR_PROPERTY",
+        "authority": { "common": "ACTIVE", "contract": "ACTIVE", "broker": "NONE" },
+        "safety_rating": "SATISFACTORY",
+        "fleet": { "power_units": 7500, "drivers": 8200 },
+        "insurance": {
+          "bipd_on_file": true,
+          "bipd_required": true,
+          "cargo_on_file": true,
+          "bond_on_file": false,
+          "form_types": ["BMC-91X"],
+          "expires_at": "2027-01-31"
+        },
+        "safety": { "inspections_24mo": 4120, "crashes_24mo": 38, "out_of_service": { "vehicle_pct": 12.1, "driver_pct": 1.9 } },
+        "mcs_150": { "mileage_year": 2025, "last_updated": "2025-11-02" },
+        "classifications": ["general_freight", "refrigerated"],
+        "contact": { "city": "OMAHA", "state": "NE", "country": "US" }
+      },
+      "fraud_signals": [
+        { "signal": "sanctions", "status": "clear" },
+        { "signal": "industry_fraud_reports", "status": "clear" },
+        { "signal": "operating_authority", "status": "clear" },
+        { "signal": "out_of_service", "status": "clear" },
+        { "signal": "bipd_insurance", "status": "clear" },
+        { "signal": "safety_record", "status": "clear" },
+        { "signal": "chameleon", "status": "clear" }
+      ],
+      "double_broker_signals": [],
+      "advisory_flags": [],
+      "risk_assessment": "PROCEED",
+      "trust_score": {
+        "score": 100,
+        "tier": "verified_elite",
+        "breakdown": [
+          { "factor": "operating_authority", "state": "active" },
+          { "factor": "insurance", "state": "current" },
+          { "factor": "safety", "state": "satisfactory" },
+          { "factor": "sanctions_fraud_screening", "state": "clear" },
+          { "factor": "identity_chameleon", "state": "clear" }
+        ],
+        "data_confidence": "high"
+      }
+    }
+  }
+}

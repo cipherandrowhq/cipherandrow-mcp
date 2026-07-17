@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mcp.cipherandrow.com/schemas/cr_verify_broker.schema.json",
+  "title": "cr_verify_broker - arguments",
+  "description": "Fetch a freight broker's verified profile and canonical 0-100 trust_score (with per-factor breakdown + breakdown_max + data_confidence), at full dashboard parity. US brokers (mc_number or dot_number): live FMCSA profile, authority status, full surety bond detail (broker.bond: BMC-84/85 type, surety company, amount, effective/cancellation dates, classification flags, freshness), fraud/identity signals - fraud_signals: the same 7-signal set the dashboard's fraud card shows (sanctions, industry fraud reports, broker authority, bond, bond classification, payout/remit-to changes, tender blocks), plus raw double_broker_signals hits and advisory_flags - and risk_assessment. Canadian brokers: provide cab_id (e.g. CAB-ON-0000157) for the Cipher & Row Canadian registry profile (province, verification band, CTQ status) with the same canonical trust_score. If you only have a legal name, call cr_search_registry first to resolve the identifier.",
+  "type": "object",
+  "x-mcp": {
+    "server": "cipher-and-row",
+    "tool": "cr_verify_broker",
+    "category": "verification",
+    "ui": { "resourceUri": "ui://cr/trust-scorecard.html" },
+    "annotations": {
+      "title": "Verify broker (US FMCSA or Canadian registry)",
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": true
+    }
+  },
+  "properties": {
+    "mc_number": {
+      "type": "string",
+      "description": "US broker MC number. Provide one of mc_number / dot_number / cab_id."
+    },
+    "dot_number": {
+      "type": "string",
+      "description": "US broker USDOT number. Provide one of mc_number / dot_number / cab_id."
+    },
+    "cab_id": {
+      "type": "string",
+      "description": "Canadian broker CAB number, format CAB-XX-NNNNNNN. Provide one of mc_number / dot_number / cab_id.",
+      "pattern": "^CAB-[A-Z]{2}-\\d{7}$"
+    }
+  },
+  "required": [],
+  "examples": [
+    { "mc_number": "131029" },
+    { "cab_id": "CAB-ON-0000157" }
+  ]
+}

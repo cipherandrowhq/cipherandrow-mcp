@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mcp.cipherandrow.com/schemas/cr_session_status.schema.json",
+  "title": "cr_session_status - arguments",
+  "description": "Introspect the MCP server: build version, calling agent identity, company logistics_role, subscription tier, per-category rate-limit headroom, and the list of tools available to this account type. Use this to detect tier ceilings and confirm which tools your role can call. Returns available_tools - the definitive role- and scope-filtered list your connection can call (computed with the same filter tools/list uses, so the two always agree) - plus granted_scopes so you can self-diagnose a missing-scope mismatch.",
+  "type": "object",
+  "x-mcp": {
+    "server": "cipher-and-row",
+    "tool": "cr_session_status",
+    "category": "status",
+    "annotations": {
+      "title": "MCP server + agent status",
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": false
+    }
+  },
+  "properties": {},
+  "required": [],
+  "examples": [
+    {}
+  ]
+}

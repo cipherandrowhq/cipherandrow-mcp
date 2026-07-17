@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mcp.cipherandrow.com/schemas/cr_search_registry.schema.json",
+  "title": "cr_search_registry - arguments",
+  "description": "Find carriers and brokers in the Cipher & Row registry by legal name or identifier (MC, USDOT, CAB, CVOR, CTQ, NSC, CR ID). Returns a list of matches with identity only - legal name, identifiers, country, and claim status - so you can pick the right entity. Trust scores are NOT returned here; call cr_verify_carrier or cr_verify_broker on a match to get its trust score (that is the verified, metered lookup).",
+  "type": "object",
+  "x-mcp": {
+    "server": "cipher-and-row",
+    "tool": "cr_search_registry",
+    "category": "search",
+    "ui": { "resourceUri": "ui://cr/registry-picker.html" },
+    "annotations": {
+      "title": "Search Cipher & Row registry",
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": false
+    }
+  },
+  "properties": {
+    "query": {
+      "type": "string",
+      "description": "Legal name or identifier (MC, USDOT, CR ID, etc.). Required."
+    },
+    "country": {
+      "type": "string",
+      "enum": ["auto", "US", "CA"],
+      "default": "auto",
+      "description": "Country scope. Default: auto."
+    },
+    "entity_type": {
+      "type": "string",
+      "enum": ["carrier", "broker", "any"],
+      "default": "any",
+      "description": "Filter by entity type. 'any' returns both."
+    }
+  },
+  "required": ["query"],
+  "examples": [
+    { "query": "bison transport", "country": "CA", "entity_type": "carrier" }
+  ]
+}

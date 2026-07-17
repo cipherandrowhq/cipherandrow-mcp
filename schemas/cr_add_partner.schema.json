@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mcp.cipherandrow.com/schemas/cr_add_partner.schema.json",
+  "title": "cr_add_partner - arguments",
+  "description": "Add a carrier or broker to your partners watchlist. Cipher & Row monitors authority, insurance, bond, safety rating, address, and phone for material changes and notifies you via your chosen channels. Idempotent: re-adding the same partner updates the existing watch. Provide dot_number when partner_kind=carrier, mc_number when partner_kind=broker.",
+  "type": "object",
+  "x-mcp": {
+    "server": "cipher-and-row",
+    "tool": "cr_add_partner",
+    "category": "watchlist",
+    "roleNote": "Carrier-role accounts may only add partner_kind=broker (their counterparties).",
+    "annotations": {
+      "title": "Add partner to watchlist",
+      "readOnlyHint": false,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": false
+    }
+  },
+  "properties": {
+    "partner_kind": {
+      "type": "string",
+      "enum": ["carrier", "broker"],
+      "description": "Carrier accounts may only add partner_kind=broker."
+    },
+    "dot_number": {
+      "type": "string",
+      "description": "Carrier USDOT number (carriers need this)."
+    },
+    "mc_number": {
+      "type": "string",
+      "description": "US broker MC number (brokers need this or cab_id)."
+    },
+    "cab_id": {
+      "type": "string",
+      "description": "Canadian broker CAB number, format CAB-XX-NNNNNNN (brokers need this or mc_number).",
+      "pattern": "^CAB-[A-Z]{2}-\\d{7}$"
+    },
+    "legal_name": {
+      "type": "string",
+      "description": "Partner legal name (optional; backfilled from FMCSA or the Canadian registry if omitted)."
+    },
+    "change_types": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["authority", "insurance", "bond", "safety_rating", "address", "phone", "chameleon_flagged"]
+      },
+      "description": "Which changes to be notified about. Default: the six standard types; chameleon_flagged (reincarnated-carrier alerts) is opt-in."
+    },
+    "delivery_channels": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["in_app", "email", "sms"]
+      },
+      "description": "Where to deliver alerts. Default: ['in_app', 'email']."
+    }
+  },
+  "required": ["partner_kind"],
+  "examples": [
+    {
+      "partner_kind": "broker",
+      "mc_number": "131029",
+      "change_types": ["authority", "bond"],
+      "delivery_channels": ["email"]
+    }
+  ]
+}

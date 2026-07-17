@@ -1,0 +1,33 @@
+{
+  "_note": "Illustrative response shape for cr_search_registry (query 'bison transport', country CA). Identity only, no trust score. Values are representative for documentation; call the live server for authoritative data.",
+  "jsonrpc": "2.0",
+  "id": 1,
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "1 match for 'bison transport' (CA): BISON TRANSPORT INC (CR-CA-CARRIER-000123, NSC-MB9002108 / DOT 264184), unclaimed."
+      }
+    ],
+    "structuredContent": {
+      "query": "bison transport",
+      "entity_type": "carrier",
+      "country": "CA",
+      "results": [
+        {
+          "cr_id": "CR-CA-CARRIER-000123",
+          "entity_type": "carrier",
+          "country": "CA",
+          "legal_name": "BISON TRANSPORT INC",
+          "city": "WINNIPEG",
+          "state": null,
+          "province": "MB",
+          "primary_identifiers": { "nsc_number": "NSC-MB9002108", "dot_number": "264184" },
+          "claim_status": "unclaimed"
+        }
+      ],
+      "total": 1,
+      "registry_version": "2026-07-01"
+    }
+  }
+}

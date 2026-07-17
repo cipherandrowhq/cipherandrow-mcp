@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mcp.cipherandrow.com/schemas/cr_remove_partner.schema.json",
+  "title": "cr_remove_partner - arguments",
+  "description": "Stop watching a partner. Soft-deletes the watch (active=false); past alert history is preserved. Reversible - re-add with cr_add_partner to resume watching.",
+  "type": "object",
+  "x-mcp": {
+    "server": "cipher-and-row",
+    "tool": "cr_remove_partner",
+    "category": "watchlist",
+    "annotations": {
+      "title": "Remove partner from watchlist",
+      "readOnlyHint": false,
+      "destructiveHint": true,
+      "idempotentHint": true,
+      "openWorldHint": false
+    }
+  },
+  "properties": {
+    "partner_id": {
+      "type": "string",
+      "description": "The partner id returned by cr_add_partner / cr_list_partners. Provide this or (partner_kind + dot_number/mc_number/cab_id)."
+    },
+    "partner_kind": {
+      "type": "string",
+      "enum": ["carrier", "broker"],
+      "description": "Alternative to partner_id."
+    },
+    "dot_number": {
+      "type": "string",
+      "description": "Alternative to partner_id."
+    },
+    "mc_number": {
+      "type": "string",
+      "description": "Alternative to partner_id."
+    },
+    "cab_id": {
+      "type": "string",
+      "description": "Alternative to partner_id (Canadian brokers).",
+      "pattern": "^CAB-[A-Z]{2}-\\d{7}$"
+    }
+  },
+  "required": [],
+  "examples": [
+    { "partner_kind": "broker", "mc_number": "131029" }
+  ]
+}

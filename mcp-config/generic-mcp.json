@@ -1,0 +1,38 @@
+{
+  "$comment": "Client-agnostic descriptor for the Cipher & Row freight verification MCP server. Any MCP client that speaks the Streamable HTTP transport can use these values. Authentication is standard OAuth 2.1 + PKCE with Dynamic Client Registration (RFC 7591); a compliant client discovers everything it needs from the two metadata documents below, so no static credentials are required. Alternatively, send a Cipher & Row API key as an Authorization: Bearer header.",
+  "name": "cipher-and-row",
+  "displayName": "Cipher & Row - Freight Verification",
+  "description": "AI-agent carrier and broker vetting for freight. Live FMCSA verification, multi-signal 0-100 trust scores, fraud and identity signals, and a monitored partner watchlist. Read-only + watchlist; no load posting or payments.",
+  "transport": "http",
+  "url": "https://mcp.cipherandrow.com/mcp",
+  "protocolVersion": "2025-06-18",
+  "authentication": {
+    "oauth2": {
+      "type": "authorization_code",
+      "pkce": true,
+      "dynamicClientRegistration": true,
+      "metadata": {
+        "authorizationServer": "https://mcp.cipherandrow.com/.well-known/oauth-authorization-server",
+        "protectedResource": "https://mcp.cipherandrow.com/.well-known/oauth-protected-resource"
+      }
+    },
+    "bearer": {
+      "type": "api_key",
+      "header": "Authorization",
+      "format": "Bearer cr_live_...",
+      "howToObtain": "https://www.cipherandrow.com/mcp/setup"
+    }
+  },
+  "documentation": "https://www.cipherandrow.com/mcp/setup",
+  "toolCount": 8,
+  "toolNames": [
+    "cr_verify_carrier",
+    "cr_verify_broker",
+    "cr_search_registry",
+    "cr_session_status",
+    "cr_add_partner",
+    "cr_remove_partner",
+    "cr_list_partners",
+    "cr_set_notifications"
+  ]
+}

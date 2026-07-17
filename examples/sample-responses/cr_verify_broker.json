@@ -1,0 +1,55 @@
+{
+  "_note": "Illustrative response shape for cr_verify_broker, using a real public identifier (C.H. Robinson, MC 131029). Field values are representative for documentation; call the live server for authoritative data.",
+  "jsonrpc": "2.0",
+  "id": 1,
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "C.H. Robinson (MC 131029). Active broker authority, BMC-84 surety bond on file, no double-broker or fraud signals. Trust 100/100 (verified_elite). Verdict: PROCEED."
+      }
+    ],
+    "structuredContent": {
+      "entity_type": "broker",
+      "cached": false,
+      "identifiers": { "mc_number": "131029", "dot_number": "1234567" },
+      "profile": {
+        "legal_name": "C.H. ROBINSON WORLDWIDE INC",
+        "authority": { "broker": "ACTIVE" },
+        "bond": {
+          "type": "BMC-84",
+          "surety_company": "(surety name)",
+          "amount": 75000,
+          "effective_date": "2010-05-01",
+          "cancellation_date": null,
+          "classification": "on_file",
+          "freshness": "current"
+        },
+        "contact": { "city": "EDEN PRAIRIE", "state": "MN", "country": "US" }
+      },
+      "fraud_signals": [
+        { "signal": "sanctions", "status": "clear" },
+        { "signal": "industry_fraud_reports", "status": "clear" },
+        { "signal": "broker_authority", "status": "clear" },
+        { "signal": "bond", "status": "clear" },
+        { "signal": "bond_classification", "status": "clear" },
+        { "signal": "payout_remit_change", "status": "clear" },
+        { "signal": "tender_blocks", "status": "clear" }
+      ],
+      "double_broker_signals": [],
+      "advisory_flags": [],
+      "risk_assessment": "PROCEED",
+      "trust_score": {
+        "score": 100,
+        "tier": "verified_elite",
+        "breakdown": [
+          { "factor": "broker_authority", "state": "active" },
+          { "factor": "surety_bond", "state": "on_file" },
+          { "factor": "bond_classification", "state": "bmc84" },
+          { "factor": "sanctions_fraud_screening", "state": "clear" }
+        ],
+        "data_confidence": "high"
+      }
+    }
+  }
+}

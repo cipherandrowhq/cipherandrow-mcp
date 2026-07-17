@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mcp.cipherandrow.com/schemas/cr_set_notifications.schema.json",
+  "title": "cr_set_notifications - arguments",
+  "description": "Update notification preferences. With partner_id: tune one watch. Without: set the company default applied to future cr_add_partner calls. Returns the effective settings after the update.",
+  "type": "object",
+  "x-mcp": {
+    "server": "cipher-and-row",
+    "tool": "cr_set_notifications",
+    "category": "watchlist",
+    "annotations": {
+      "title": "Tune partner alert preferences",
+      "readOnlyHint": false,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": false
+    }
+  },
+  "properties": {
+    "partner_id": {
+      "type": "string",
+      "description": "Optional. If omitted, updates the company-default policy applied to future watches."
+    },
+    "change_types": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["authority", "insurance", "bond", "safety_rating", "address", "phone", "chameleon_flagged"]
+      },
+      "description": "Replace the watched change types."
+    },
+    "delivery_channels": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["in_app", "email", "sms"]
+      },
+      "description": "Replace the delivery channels."
+    }
+  },
+  "required": [],
+  "examples": [
+    { "delivery_channels": ["in_app", "email"] }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "cipherandrow": {
+      "type": "http",
+      "url": "https://mcp.cipherandrow.com/mcp"
+    }
+  }
+}
